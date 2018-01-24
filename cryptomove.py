@@ -54,12 +54,44 @@ def cheapestTransfer(fromExchange, toExchange, amount, startCurrency):
 
 
 #start of main program
-start = input("Please enter the name of the exchange you are transferring from: \n")
 
-end = input("Please enter the name of the exchange you are transferring to: \n")
+start = ""
+while start not in exchanges:
 
-currency = input("please enter the code of the currency you are transferring. i.e. XRP: \n")
+    start = input("Please enter the name of the exchange you are transferring from: \n")
 
-amount = float(input("Please enter the amount of currency you are transferring: \n"))
+    if start not in exchanges:
+        print("Error: Exchange not supported.")
 
-cheapestTransfer(exchanges[start], exchanges[end], amount, currency)
+
+end = ""
+while end not in exchanges or end == start:
+
+    end = input("Please enter the name of the exchange you are transferring to: \n")
+
+    if end not in exchanges:
+        print("Error: Exchange not supported.")
+
+    if end == start:
+        print("Your starting and ending exchanges seem to be the same.")
+
+currency = ""
+while currency not in exchanges[start]["currencies"]:
+
+    currency = input("Please enter the code of the currency you are transferring. i.e. XRP: \n")
+
+    if currency not in exchanges[start]["currencies"]:
+        print("Error: currency code not found.")
+
+while True:
+    try:
+        amount = float(input("Please enter the amount of currency you are transferring: \n"))
+
+        if amount >= exchanges[start]["currencies"][currency][0]:
+            cheapestTransfer(exchanges[start], exchanges[end], amount, currency)
+        else:
+            print("This number is below the minimum value for this currency.")
+
+    except ValueError:
+        print("This was not recognised as a number.")
+
